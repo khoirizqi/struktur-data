@@ -1,0 +1,230 @@
+/*  Nama    : Khoirizqi Velarati
+    NIM     : A11.2021.13895
+    Kelas   : A11.4317
+    Matkul  : Struktur Data
+*/
+
+
+#include<iostream>
+#include<string>
+#define MAX 20
+using namespace std;
+
+
+void push(char);
+char pop();
+string in2prefix(string);
+int priority ( char );
+char stk[20];
+int top=-1;
+bool isFull();
+bool isEmpty();
+void reverse_();
+
+int main()
+{
+    string infix, prefix;
+    cout << "masukkan infix : ";
+    cin >> infix;
+    prefix = in2prefix(infix);
+    return 0;
+}
+
+bool isFull()
+{
+    if(top == MAX - 1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool isEmpty()
+{
+    if(top == -1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+// prosedur memasukkan operator ke stack
+void push(char oper)
+{
+    if(isFull())
+    {
+        cout << "stack penuh";
+    }
+    else
+    {
+        top++;
+        stk[top] = oper;
+    }
+}
+
+// fungsi untuk menghapus data dari stack
+char pop()
+{
+    char ch;
+    if(isEmpty())
+    {
+        cout << "stack kosong!!!!";
+    }
+    else
+    {
+        ch = stk[top];
+        stk[top] = '\0';
+        top--;
+        return(ch);
+    }
+    return 0;
+}
+
+//reverse
+
+void reverse_(string& str)
+{
+    int len = str.length();
+    int n = len-1;
+    int i = 0;
+    while(i<=n)
+    {
+        //menukar nilai
+        swap(str[i],str[n]);
+        n = n-1;
+        i = i+1;
+    }
+
+}
+
+//fungsi untuk mengonversi infix ke prefix
+string in2prefix(string infix)
+{
+    int i=0;
+    reverse_(infix);
+    string pre = "";
+
+    // looping selama urutan terakhir string tidak kosong
+    while(infix[i]!='\0')
+    {
+        // jika ketemu alfabet, maka masukkan ke variabel
+        if(infix[i]>='a' && infix[i]<='z')
+        {
+            pre.insert(pre.begin(),infix[i]);
+            i++;
+        }
+
+        // jika ketemu kurung tutup, push ke stack
+        else if(infix[i]==')' || infix[i]=='}'  || infix[i]==']')
+        {
+            push(infix[i]);
+            i++;
+        }
+
+        //jika ketemu kurung buka, pop dari stack
+        else if(infix[i]=='(' || infix[i]=='{'  || infix[i]=='[')
+        {
+            if(infix[i]=='(')
+            {
+                while(stk[top]!=')')
+                {
+                    pre.insert(pre.begin(),pop());
+                }
+                pop();
+                i++;
+            }
+
+            if(infix[i]=='[')
+            {
+                while(stk[top]!=']')
+                {
+                    pre.insert(pre.begin(),pop());
+                }
+                pop();
+                i++;
+            }
+
+            if(infix[i]=='{')
+            {
+                while(stk[top]!='}')
+                {
+                    pre.insert(pre.begin(),pop());
+                }
+                pop();
+                i++;
+            }
+        }
+
+        //kalo ga ada kurung tutup, berarti cuma ada operator aja, lakukan blok berikut
+        else
+        {
+            // jika stack kosong, push ke stack
+            if(isEmpty())
+            {
+                push(infix[i]);
+                i++;
+            }
+
+            // jika prioritas operator kurang dari atau sama dengan operator yang ada di top of stack
+            // pop operator yang di stack, kemudian masukkan ke pre
+            else if( priority(infix[i]) <= priority(stk[top]))
+            {
+                pre.insert(pre.begin(),pop());
+
+                // jika prioritas operator sama dengan operator di stack, pop
+                while(priority(stk[top]) == priority(infix[i]))
+                {
+                    pre.insert(pre.begin(),pop());
+                    if(top < 0)
+                    {
+                        break;
+                    }
+                }
+                push(infix[i]);
+                i++;
+            }
+
+            // jika prioritas operator lebih tinggi, push operator ke stack
+            else if(priority(infix[i]) > priority(stk[top]))
+            {
+                push(infix[i]);
+                i++;
+            }
+        }
+    }
+
+    // pada akhirnya, remove semua operator dari stack
+    while(top!=-1)
+    {
+        pre.insert(pre.begin(),pop());
+    }
+    cout << "Hasil konversi ke prefix : " << pre;
+    return pre;
+}
+
+// fungsi untuk mencari prioritas operator
+int priority ( char alpha )
+{
+    if(alpha == '+' || alpha =='-')
+    {
+        return 1;
+    }
+
+    if(alpha == '*' || alpha =='/')
+    {
+        return 2;
+    }
+
+    if(alpha == '$')
+    {
+        return 3;
+    }
+
+    return 0;
+}
