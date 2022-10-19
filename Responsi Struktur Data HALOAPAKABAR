@@ -1,0 +1,75 @@
+/*  Nama    : Khoirizqi Velarati
+    NIM     : A11.2021.13895
+    Kelas   : A11.4317
+*/
+
+#include <iostream>
+using namespace std;
+#define MAX 30
+
+string stack1="HA***L*OAP***A*K*A*B*AR";
+char stack2[MAX];
+int top=-1;
+char pesan;
+
+bool isFull()
+{
+    if(top >= MAX)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool isEmpty()
+{
+    if(top == -1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void push()
+{
+    if(!isFull())
+    {
+        top++;
+        stack2[top]=pesan;
+    }
+}
+
+void psn()
+{
+    for(int i=0; i<MAX; i++)
+    {
+        if(stack1[i]=='*')
+        {
+
+        }
+        else
+        {
+            pesan=stack1[i];
+            push();
+        }
+    }
+}
+
+
+int main()
+{
+    psn();
+    for(int j=0; j<MAX; j++)
+    {
+        cout << stack2[j];
+    }
+    cout << endl;
+
+    return 0;
+}
